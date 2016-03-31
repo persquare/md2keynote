@@ -1,0 +1,18 @@
+Modern Portfolio             White                           Custom 
+----------------             -----                           -------------
+u'Title & Subtitle'          u'Title & Subtitle'             u'Title and subtitle' # Wrong name
+u'Photo - Horizontal'        u'Photo - Horizontal'           u'Title'                     
+u'Title - Center'            u'Title - Center'               u'Title copy'
+u'Photo - Vertical'          u'Photo - Vertical'             u'Title only'
+u'Title - Top'               u'Title - Top'                  u'Title and single'
+u'Title & Bullets'           u'Title & Bullets'              u'Title & image right'
+u'Title, Bullets & Photo'    u'Title, Bullets & Photo'       u'Title & image left'
+u'Bullets'                   u'Bullets'                      
+u'Photo - 3 Up'              u'Photo - 3 Up'                 
+u'Quote'                     u'Quote'                        
+u'Photo'                     u'Photo'                        
+u'Blank'                     u'Blank'                        u'Blank'
+                             
+
+
+
