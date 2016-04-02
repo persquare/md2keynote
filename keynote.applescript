@@ -16,6 +16,12 @@ on newPresentation(themeName)
 end newPresentation
 
 
+on savePresentation(docname, posixPath)
+	tell application "Keynote"
+		save document named docname in POSIX file posixPath
+	end tell
+end savePresentation	
+
 on createSlide(docname, masterSlideName, thisSlideTitle, thisSlideBody)
 	try
 		tell application "Keynote"
