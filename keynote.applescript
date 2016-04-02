@@ -51,3 +51,24 @@ on themeMasters(docname)
         return names
     end tell
 end themeMasters
+
+on addImage(docname, filepath)
+  (*
+    FIXME: Use slide ID to adress slide instead of "current slide"
+  *)
+  tell application "Keynote"
+  	tell document named docname
+  		tell the current slide
+			
+  			-- TO REPLACE A PLACEHOLDER OR EXISTING IMAGE:
+  			set thisPlaceholderImageItem to image 1
+  			-- change the value of the “file name” property of the image to be an HFS file reference to the replacement image file
+        set macPath to POSIX file filepath as Unicode text
+  			set file name of thisPlaceholderImageItem to ¬
+  				alias macPath
+			
+  		end tell
+  	end tell
+  end tell
+end addImage
+
