@@ -1,16 +1,13 @@
 on newPresentation(themeName)
 	tell application "Keynote"
 		activate
-		-- set the chosenTheme to themeName
-
-
+		-- FIXME: Make this selectable?
 		set targetWidth to 1024 -- 1440 <-- higher resolution
 		set targetHeight to 768 -- 1080 <-- higher resolution
 
-		set thisDocument to ¬
-			make new document with properties ¬
-				{document theme:theme (themeName as string)}
-				--{document theme:theme (themeName as string), width:targetWidth, height:targetHeight}
+		set props to {document theme:theme (themeName as string), width:targetWidth, height:targetHeight}
+
+		set thisDocument to make new document with properties props
 		return name of thisDocument
 	end tell
 end newPresentation
