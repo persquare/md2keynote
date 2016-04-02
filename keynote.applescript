@@ -1,18 +1,18 @@
 on newPresentation(themeName)
-    tell application "Keynote"
-    	activate
-    	-- set the chosenTheme to themeName
+	tell application "Keynote"
+		activate
+		-- set the chosenTheme to themeName
 
 
-    	set targetWidth to 1024 -- 1440 <-- higher resolution
-    	set targetHeight to 768 -- 1080 <-- higher resolution
+		set targetWidth to 1024 -- 1440 <-- higher resolution
+		set targetHeight to 768 -- 1080 <-- higher resolution
 
-    	set thisDocument to ¬
-    		make new document with properties ¬
-                {document theme:theme (themeName as string)}
-    			--{document theme:theme (themeName as string), width:targetWidth, height:targetHeight}
-        return name of thisDocument
-    end tell
+		set thisDocument to ¬
+			make new document with properties ¬
+				{document theme:theme (themeName as string)}
+				--{document theme:theme (themeName as string), width:targetWidth, height:targetHeight}
+		return name of thisDocument
+	end tell
 end newPresentation
 
 
@@ -31,7 +31,7 @@ on createSlide(docname, masterSlideName, thisSlideTitle, thisSlideBody)
 					end if
 				end tell
 			end tell
-      return thisSlide
+	  return thisSlide
 		end tell
 	on error
 		return 0
@@ -41,34 +41,34 @@ end createSlide
 on finalize(docname)
 	tell application "Keynote"
 		tell document named docname to delete slide 1
-    end tell
+	end tell
 end finalize
 
 on themeMasters(docname)
-    --    tell application "Keynote" to get the name of every master slide of thisDocument
+	--	  tell application "Keynote" to get the name of every master slide of thisDocument
 	tell application "Keynote"
 		set names to the name of every master slide of document named docname
-        return names
-    end tell
+		return names
+	end tell
 end themeMasters
 
 on addImage(docname, filepath)
   (*
-    FIXME: Use slide ID to adress slide instead of "current slide"
+	FIXME: Use slide ID to adress slide instead of "current slide"
   *)
   tell application "Keynote"
-  	tell document named docname
-  		tell the current slide
+	tell document named docname
+		tell the current slide
 			
-  			-- TO REPLACE A PLACEHOLDER OR EXISTING IMAGE:
-  			set thisPlaceholderImageItem to image 1
-  			-- change the value of the “file name” property of the image to be an HFS file reference to the replacement image file
-        set macPath to POSIX file filepath as Unicode text
-  			set file name of thisPlaceholderImageItem to ¬
-  				alias macPath
+			-- TO REPLACE A PLACEHOLDER OR EXISTING IMAGE:
+			set thisPlaceholderImageItem to image 1
+			-- change the value of the “file name” property of the image to be an HFS file reference to the replacement image file
+		set macPath to POSIX file filepath as Unicode text
+			set file name of thisPlaceholderImageItem to ¬
+				alias macPath
 			
-  		end tell
-  	end tell
+		end tell
+	end tell
   end tell
 end addImage
 
