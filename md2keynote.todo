@@ -10,6 +10,10 @@ Markdown syntax:
 - Decide on the md subset corresponding to master slide layouts
   - Depends on how much control one can assert over Keynote, see 'Controlling Keynote' below
 - How do you choose slide master?
+  - Has picture or not
+  - Has list?
+  - Is picture before or after list?
+    Determines left/right position
 - Simple animation annotation?
 
 Markdown parsing:
@@ -21,10 +25,10 @@ Controlling Keynote:
 - Load/save presentation
 - How to add images?
   See https://iworkautomation.com/keynote/image.html
-- How to add links?
 - Body text attributes?
   Great for syntax highlighted code
   See https://iworkautomation.com/keynote/text-item-styling.html
 - Tables and charts
   See https://iworkautomation.com/keynote/chart-table.html
+- How to add links?
 
