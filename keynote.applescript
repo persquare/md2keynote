@@ -12,6 +12,11 @@ on newPresentation(themeName)
 	end tell
 end newPresentation
 
+on openPresentation(posixPath)
+	tell application "Keynote"
+		open posixPath
+	end tell
+end openPresentation
 
 on savePresentation(docname, posixPath)
 	tell application "Keynote"
