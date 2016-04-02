@@ -19,20 +19,11 @@ on savePresentation(docname, posixPath)
 	end tell
 end savePresentation	
 
-on createSlide(docname, masterSlideName, thisSlideTitle, thisSlideBody)
+on createSlide(docname, masterSlideName)
 	try
 		tell application "Keynote"
 			tell document named docname
 				set thisSlide to make new slide with properties {base slide:master slide masterSlideName}
-				tell thisSlide
-					-- set the transition properties to {transition effect:dissolve, transition duration:defaultTransitionDuration, transition delay:defaultTransitionDelay, automatic transition:defaultAutomaticTransition}
-					if title showing is true then
-						set the object text of the default title item to thisSlideTitle
-					end if
-					if body showing is true then
-						set the object text of the default body item to thisSlideBody
-					end if
-				end tell
 			end tell
 	  return thisSlide
 		end tell
@@ -75,3 +66,33 @@ on addImage(docname, filepath)
   end tell
 end addImage
 
+
+on addTitle(docname, thisSlideTitle)
+  (*
+	FIXME: Use slide ID to adress slide instead of "current slide"
+  *)
+	tell application "Keynote"
+		tell document named docname
+			tell the current slide
+				if title showing is true then
+					set the object text of the default title item to thisSlideTitle
+				end if
+			end tell
+		end tell
+	end tell
+end addTitle
+
+on addBody(docname, thisSlideBody)
+  (*
+	FIXME: Use slide ID to adress slide instead of "current slide"
+  *)
+	tell application "Keynote"
+		tell document named docname
+			tell the current slide
+				if body showing is true then
+					set the object text of the default body item to thisSlideBody
+				end if
+			end tell
+		end tell
+	end tell
+end addTitle
