@@ -37,6 +37,12 @@ on createSlide(docname, masterSlideName)
 	end try
 end createSlide
 
+on deleteAllSlides(docname)
+	tell application "Keynote"
+		tell document named docname to delete every slide
+	end tell
+end deleteAllSlides
+
 on finalize(docname)
 	tell application "Keynote"
 		tell document named docname to delete slide 1
