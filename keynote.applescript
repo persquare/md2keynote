@@ -31,8 +31,8 @@ on createSlide(docname, masterSlideName, thisSlideTitle, thisSlideBody)
 					end if
 				end tell
 			end tell
+      return thisSlide
 		end tell
-		return 1
 	on error
 		return 0
 	end try
