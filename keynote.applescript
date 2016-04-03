@@ -107,3 +107,16 @@ on addBody(docname, thisSlideBody)
 		end tell
 	end tell
 end addTitle
+
+on addPresenterNotes(docname, note)
+    (*
+  	FIXME: Use slide ID to adress slide instead of "current slide"
+    *)
+	tell application "Keynote"
+		tell document named docname
+			tell the current slide
+				set presenter notes to note
+			end tell
+		end tell
+	end tell
+end addPresenterNotes
