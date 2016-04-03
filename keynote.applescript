@@ -120,3 +120,18 @@ on addPresenterNotes(docname, note)
 		end tell
 	end tell
 end addPresenterNotes
+
+on addText(docname, n, theText)
+  (*
+	FIXME: Use slide ID to adress slide instead of "current slide"
+  *)
+  tell application "Keynote"
+	tell document named docname
+		tell the current slide
+			set thisPlaceholderItem to text item n
+			set object text of thisPlaceholderItem to theText
+		end tell
+	end tell
+  end tell
+end addText
+
