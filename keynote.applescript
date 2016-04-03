@@ -57,7 +57,7 @@ on themeMasters(docname)
 	end tell
 end themeMasters
 
-on addImage(docname, filepath)
+on addImage(docname, n, filepath)
   (*
 	FIXME: Use slide ID to adress slide instead of "current slide"
   *)
@@ -66,7 +66,7 @@ on addImage(docname, filepath)
 		tell the current slide
 			
 			-- TO REPLACE A PLACEHOLDER OR EXISTING IMAGE:
-			set thisPlaceholderImageItem to image 1
+			set thisPlaceholderImageItem to image n
 			-- change the value of the “file name” property of the image to be an HFS file reference to the replacement image file
 		set macPath to POSIX file filepath as Unicode text
 			set file name of thisPlaceholderImageItem to ¬
