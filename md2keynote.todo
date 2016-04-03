@@ -7,28 +7,33 @@ Custom Theme:
 Markdown syntax:
 - Use metadata for theme, size, file location, author, organization, footer, autoplay, etc.
   See http://hiltmon.com/blog/2012/06/18/markdown-metadata/
-- Decide on the md subset corresponding to master slide layouts
-  - Depends on how much control one can assert over Keynote, see 'Controlling Keynote' below
-- How do you choose slide master?
-  - Has picture or not
-  - Has list?
-  - Is picture before or after list?
-    Determines left/right position
 - Simple animation annotation?
 
 Markdown parsing:
-- Use pandoc?
-- Mistune (python) looks good too, supports custom renderers
-  See https://github.com/lepture/mistune
 
 Controlling Keynote:
-- Load/save presentation
-- How to add images?
-  See https://iworkautomation.com/keynote/image.html
 - Body text attributes?
   Great for syntax highlighted code
   See https://iworkautomation.com/keynote/text-item-styling.html
 - Tables and charts
   See https://iworkautomation.com/keynote/chart-table.html
 - How to add links?
+- How to create sub-bullets?
 
+
+Archive:
+---- 2016-04-03 22:24:40 ----
++ Decide on the md subset corresponding to master slide layouts
++ Depends on how much control one can assert over Keynote, see 'Controlling Keynote' below
++ How do you choose slide master?
++ Has picture or not
++ Has list?
++ Is picture before or after list?
+Determines left/right position
++ Use pandoc?
++ Mistune (python) looks good too, supports custom renderers
+See https://github.com/lepture/mistune
+---- 2016-04-02 17:47:53 ----
++ Load/save presentation
++ How to add images?
+See https://iworkautomation.com/keynote/image.html
