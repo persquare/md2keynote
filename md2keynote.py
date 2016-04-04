@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 
+import os
 import re
 import mistune
 from applescripting import OSAScript
 
 METADATA = r'^\s*(\w+)\s*:\s*(.*?)\s*$'
 
+def process_path(path):
+    return os.path.abspath(os.path.expandvars(os.path.expanduser(path)))
+
 def preprocess(file):
+    path_keys = ['File']
     meta = {}
     lines = []
     with open(file) as f:
@@ -23,6 +28,11 @@ def preprocess(file):
             if not in_metadata:
                 lines.append(line)
         text = "".join(lines)
+    # Process paths
+    for key in path_keys:
+        if key in meta:
+            meta[key] = process_path(meta[key])
+
     return meta, text
 
 
@@ -305,7 +315,7 @@ class KeynoteRenderer(mistune.Renderer):
         :param text: alt text of the image.
         """
         self._state.setdefault('images', [])
-        self._state['images'].append([src, title, text])
+        self._state['images'].append([process_path(src), title, text])
         self._order.append('image')
         return ''
 
@@ -351,21 +361,17 @@ if __name__ == '__main__':
 
     with open("keynote.applescript") as f:
         source = f.read().decode('utf-8')
-
     keynote = OSAScript(source)
 
     meta, text =  preprocess("test.md")
     doc = keynote.newPresentation("White")
-    # keynote.savePresentation(doc, "/Users/eperspe/Documents/test88.key")
-
-
     md = mistune.Markdown(renderer=KeynoteRenderer(keynote, doc))
-    # md = mistune.Markdown()
     result = md.parse(text)
-
     keynote.finalize(doc)
-    keynote.savePresentation(doc, "/Users/eperspe/Documents/test88.key")
+    if 'File' in meta:
+        keynote.savePresentation(doc, meta['File'])
 
+    #
 # if __name__ == '__main__':
 #
 #     with open("keynote.applescript") as f:

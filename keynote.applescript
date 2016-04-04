@@ -20,6 +20,7 @@ end openPresentation
 
 on savePresentation(docId, posixPath)
 	tell application "Keynote"
+		activate	
         set theDocument to document id docId
 		save theDocument in POSIX file posixPath
 	end tell
