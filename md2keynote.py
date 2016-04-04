@@ -126,8 +126,6 @@ class KeynoteRenderer(mistune.Renderer):
         self.keynote.addText(self.doc, self._count, 2, self._state['quote'])
         self.keynote.addText(self.doc, self._count, 1, self._paragraphs[1])
 
-        print master, self._paragraphs
-
     def new_bullet_slide(self):
         master = 'Bullets'
         self.keynote.createSlide(self.doc, master)
