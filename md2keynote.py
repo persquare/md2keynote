@@ -368,6 +368,7 @@ if __name__ == '__main__':
     keynote.finalize(doc)
     if 'File' in meta:
         keynote.savePresentation(doc, meta['File'])
+        keynote.openPresentation(meta['File'])
 
     #
 # if __name__ == '__main__':

@@ -19,12 +19,23 @@ on openPresentation(posixPath)
 end openPresentation
 
 on savePresentation(docId, posixPath)
-	tell application "Keynote"
+	tell application "Keynote"	
 		activate	
         set theDocument to document id docId
 		save theDocument in POSIX file posixPath
+        delete theDocument
+        open posixPath 
 	end tell
 end savePresentation	
+
+on closePresentation(docId)
+	tell application "Keynote"	
+		activate	
+        set theDocument to document id docId
+		close theDocument
+	end tell
+end savePresentation	
+
 
 on createSlide(docId, masterSlideName)
 	tell application "Keynote"
