@@ -8,7 +8,7 @@ on newPresentation(themeName)
 		set props to {document theme:theme (themeName as string), width:targetWidth, height:targetHeight}
 
 		set thisDocument to make new document with properties props
-		return name of thisDocument
+		return id of thisDocument
 	end tell
 end newPresentation
 
@@ -18,119 +18,99 @@ on openPresentation(posixPath)
 	end tell
 end openPresentation
 
-on savePresentation(docname, posixPath)
+on savePresentation(docId, posixPath)
 	tell application "Keynote"
-		save document named docname in POSIX file posixPath
+        set theDocument to document id docId
+		save theDocument in POSIX file posixPath
 	end tell
 end savePresentation	
 
-on createSlide(docname, masterSlideName)
-	try
-		tell application "Keynote"
-			tell document named docname
-				set thisSlide to make new slide with properties {base slide:master slide masterSlideName}
-			end tell
-	  return thisSlide
+on createSlide(docId, masterSlideName)
+	tell application "Keynote"
+		tell document id docId
+			set thisSlide to make new slide with properties {base slide:master slide masterSlideName}
 		end tell
-	on error
-		return 0
-	end try
+	end tell
 end createSlide
 
-on deleteAllSlides(docname)
+on deleteAllSlides(docId)
 	tell application "Keynote"
-		tell document named docname to delete every slide
+		tell document id docId to delete every slide
 	end tell
 end deleteAllSlides
 
-on finalize(docname)
+on finalize(docId)
 	tell application "Keynote"
-		tell document named docname to delete slide 1
+		tell document id docId to delete slide 1
 	end tell
 end finalize
 
-on themeMasters(docname)
+on themeMasters(docId)
 	--	  tell application "Keynote" to get the name of every master slide of thisDocument
 	tell application "Keynote"
-		set names to the name of every master slide of document named docname
+		set names to the name of every master slide of document id docId
 		return names
 	end tell
 end themeMasters
 
-on addImage(docname, n, filepath)
+on addImage(docId, slideIndex, n, filepath)
   (*
 	FIXME: Use slide ID to adress slide instead of "current slide"
   *)
   tell application "Keynote"
-	tell document named docname
-		tell the current slide
-			
-			-- TO REPLACE A PLACEHOLDER OR EXISTING IMAGE:
-			set thisPlaceholderImageItem to image n
-			-- change the value of the “file name” property of the image to be an HFS file reference to the replacement image file
-		set macPath to POSIX file filepath as Unicode text
-			set file name of thisPlaceholderImageItem to ¬
-				alias macPath
-			
-		end tell
+	tell slide slideIndex of document id docId
+		-- TO REPLACE A PLACEHOLDER OR EXISTING IMAGE:
+		set thisPlaceholderImageItem to image n
+		-- change the value of the “file name” property of the image to be an HFS file reference to the replacement image file
+	    set macPath to POSIX file filepath as Unicode text
+		set file name of thisPlaceholderImageItem to ¬
+			alias macPath
 	end tell
   end tell
 end addImage
 
 
-on addTitle(docname, thisSlideTitle)
+on addTitle(docId, slideIndex, thisSlideTitle)
   (*
 	FIXME: Use slide ID to adress slide instead of "current slide"
   *)
 	tell application "Keynote"
-		tell document named docname
-			tell the current slide
-				if title showing is true then
-					set the object text of the default title item to thisSlideTitle
-				end if
-			end tell
+    	tell slide slideIndex of document id docId
+			set the object text of the default title item to thisSlideTitle
 		end tell
 	end tell
 end addTitle
 
-on addBody(docname, thisSlideBody)
+on addBody(docId, slideIndex, thisSlideBody)
   (*
 	FIXME: Use slide ID to adress slide instead of "current slide"
   *)
 	tell application "Keynote"
-		tell document named docname
-			tell the current slide
-				if body showing is true then
-					set the object text of the default body item to thisSlideBody
-				end if
-			end tell
+    	tell slide slideIndex of document id docId
+            set the object text of the default body item to thisSlideBody
 		end tell
 	end tell
 end addTitle
 
-on addPresenterNotes(docname, note)
+on addPresenterNotes(docId, slideIndex, note)
     (*
   	FIXME: Use slide ID to adress slide instead of "current slide"
     *)
 	tell application "Keynote"
-		tell document named docname
-			tell the current slide
-				set presenter notes to note
-			end tell
+    	tell slide slideIndex of document id docId
+			set presenter notes to note
 		end tell
 	end tell
 end addPresenterNotes
 
-on addText(docname, n, theText)
+on addText(docId, slideIndex, n, theText)
   (*
 	FIXME: Use slide ID to adress slide instead of "current slide"
   *)
   tell application "Keynote"
-	tell document named docname
-		tell the current slide
-			set thisPlaceholderItem to text item n
-			set object text of thisPlaceholderItem to theText
-		end tell
+  	tell slide slideIndex of document id docId
+		set thisPlaceholderItem to text item n
+		set object text of thisPlaceholderItem to theText
 	end tell
   end tell
 end addText

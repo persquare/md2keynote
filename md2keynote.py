@@ -22,9 +22,9 @@ def preprocess(file):
                     in_metadata = False
             if not in_metadata:
                 lines.append(line)
-        text = "".join(lines)        
+        text = "".join(lines)
     return meta, text
-                                
+
 
 class KeynoteRenderer(mistune.Renderer):
     """The default HTML renderer for rendering Markdown.
@@ -33,18 +33,18 @@ class KeynoteRenderer(mistune.Renderer):
         super(KeynoteRenderer, self).__init__(**kwargs)
         self.keynote = keynote
         self.doc = doc
-        self._count = 0
+        self._count = 1 # Starts with a dummy slide
         self._reset_state()
-        
+
     def _reset_state(self):
         self._state = {}
         self._order = []
         self._paragraphs = []
-        
+
 
     def new_slide(self):
         self._count += 1
-                
+
         keys = self._state.keys()
         key_count = len(keys)
 
@@ -57,7 +57,7 @@ class KeynoteRenderer(mistune.Renderer):
                 'images': self.new_photo_slide,
                 'quote': self.new_quote_slide,
                 'bullets' : self.new_bullet_slide
-            }.get(keys[0], self.malformed_slide) 
+            }.get(keys[0], self.malformed_slide)
         elif key_count == 2:
             if 'title' in keys:
                 if 'subtitle' in keys:
@@ -70,77 +70,88 @@ class KeynoteRenderer(mistune.Renderer):
                     handler = self.new_title_photo_slide
                 elif 'bullets' in keys:
                     handler = self.new_title_bullets_photo_slide
-        handler()
-        self._reset_state()
-        
+        try:
+            handler()
+        except Exception as e:
+            print e
+            self.malformed_slide()
+        finally:
+            self._reset_state()
+
+
     def malformed_slide(self):
-        print "Slide %d is malformed, skipping".format(count)
+        print "Slide {} is malformed, skipping".format(self._count)
+        print
+        print self._state
         print
         print "    ", self._state.get('title', '---')
         print "    ", self._state.keys()
         print "    ", self._paragraphs
-        print "    ", self._order 
-        print 
-        
- 
+        print "    ", self._order
+        print
+
+
     def new_blank_slide(self):
         master = 'Blank'
         self.keynote.createSlide(self.doc, master)
-        
+
     def new_title_center_slide(self):
         master = 'Title - Center'
         self.keynote.createSlide(self.doc, master)
-        self.keynote.addTitle(self.doc, self._state['title'])        
-        
+        self.keynote.addTitle(self.doc, self._count, self._state['title'])
+
     def new_photo_slide(self):
         if len(self._state['images']) == 1:
             master = 'Photo'
         else:
-            master = 'Photo - 3 Up' 
+            master = 'Photo - 3 Up'
         self.keynote.createSlide(self.doc, master)
         images = self._state['images']
         for n in range(0, min(len(images), 3)):
-            self.keynote.addImage(self.doc, n+1, images[n][0])        
-        
+            self.keynote.addImage(self.doc, self._count, n+1, images[n][0])
+
     def new_quote_slide(self):
         master = 'Quote'
         self.keynote.createSlide(self.doc, master)
+        self.keynote.addText(self.doc, self._count, 2, self._state['quote'])
+        self.keynote.addText(self.doc, self._count, 1, self._paragraphs[1])
+
         print master, self._paragraphs
-        
+
     def new_bullet_slide(self):
         master = 'Bullets'
         self.keynote.createSlide(self.doc, master)
-        self.keynote.addBody(self.doc, '\n'.join(self._state['bullets']))        
-        
+        self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
+
     def new_title_subtitle_slide(self):
         master = 'Title & Subtitle'
         self.keynote.createSlide(self.doc, master)
-        self.keynote.addTitle(self.doc, self._state['title'])        
-        self.keynote.addBody(self.doc, self._state['subtitle'])        
-        
+        self.keynote.addTitle(self.doc, self._count, self._state['title'])
+        self.keynote.addBody(self.doc, self._count, self._state['subtitle'])
+
     def new_title_bullets_slide(self):
         master = 'Title & Bullets'
         self.keynote.createSlide(self.doc, master)
-        self.keynote.addTitle(self.doc, self._state['title'])        
-        self.keynote.addBody(self.doc, '\n'.join(self._state['bullets']))                
-        
+        self.keynote.addTitle(self.doc, self._count, self._state['title'])
+        self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
+
     def new_title_bullets_photo_slide(self):
         master = 'Title, Bullets & Photo'
         self.keynote.createSlide(self.doc, master)
-        self.keynote.addTitle(self.doc, self._state['title'])        
-        self.keynote.addBody(self.doc, '\n'.join(self._state['bullets']))        
-        self.keynote.addImage(self.doc, 1, self._state['images'][0][0])        
-        
+        self.keynote.addTitle(self.doc, self._count, self._state['title'])
+        self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
+        self.keynote.addImage(self.doc, self._count, 1, self._state['images'][0][0])
+
     def new_title_photo_slide(self):
         if self._order == ['title', 'image', 'subtitle']:
             master = 'Photo - Horizontal'
         else:
             master = 'Photo - Vertical'
         self.keynote.createSlide(self.doc, master)
-        self.keynote.addTitle(self.doc, self._state['title'])        
-        self.keynote.addBody(self.doc, self._state['subtitle'])        
-        self.keynote.addImage(self.doc, 1, self._state['images'][0][0])        
- 
+        self.keynote.addTitle(self.doc, self._count, self._state['title'])
+        self.keynote.addBody(self.doc, self._count, self._state['subtitle'])
+        self.keynote.addImage(self.doc, self._count, 1, self._state['images'][0][0])
+
     def block_code(self, code, lang=None):
         """Rendering block level code. ``pre > code``.
 
@@ -171,12 +182,12 @@ class KeynoteRenderer(mistune.Renderer):
         :param level: a number for the header level, for example: 1.
         :param raw: raw text content of the header.
         """
-        kind = None 
+        kind = None
         if level == 1:
             kind = 'title'
         elif level == 2:
             kind = 'subtitle'
-        if kind:    
+        if kind:
             self._state[kind] = text.strip()
             self._order.append(kind)
         return ''
@@ -226,7 +237,7 @@ class KeynoteRenderer(mistune.Renderer):
         :param align: align of current table cell.
         """
         return 'table_cell\n'
-        
+
     def double_emphasis(self, text):
         """Rendering **strong** text.
 
@@ -345,13 +356,16 @@ if __name__ == '__main__':
 
     meta, text =  preprocess("test.md")
     doc = keynote.newPresentation("White")
-    
+    # keynote.savePresentation(doc, "/Users/eperspe/Documents/test88.key")
+
+
     md = mistune.Markdown(renderer=KeynoteRenderer(keynote, doc))
     # md = mistune.Markdown()
-    result = md.parse(text) 
+    result = md.parse(text)
 
     keynote.finalize(doc)
-    keynote.savePresentation(doc, "/Users/per/Documents/test88.key")
+    keynote.savePresentation(doc, "/Users/eperspe/Documents/test88.key")
+
 # if __name__ == '__main__':
 #
 #     with open("keynote.applescript") as f:
@@ -371,5 +385,5 @@ if __name__ == '__main__':
 #     keynote.finalize(doc)
 #     # keynote.deleteAllSlides(doc)
 #     keynote.savePresentation(doc, "/Users/per/Documents/test88.key")
-    
-   
+
+
