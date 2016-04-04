@@ -5,7 +5,13 @@ Custom Theme:
 - Fix names of all master slides
 
 Markdown syntax:
-- Use metadata for theme, size, file location, author, organization, footer, autoplay, etc.
+- Use metadata for
+  - wide/narrow
+  - author
+  - organization
+  - footer
+  - autoplay
+  - automatic export
   See http://hiltmon.com/blog/2012/06/18/markdown-metadata/
 - Simple animation annotation?
 
@@ -22,6 +28,9 @@ Controlling Keynote:
 
 
 Archive:
+---- 2016-04-04 18:45:27 ----
++ theme
++ file location,
 ---- 2016-04-03 22:24:40 ----
 + Decide on the md subset corresponding to master slide layouts
 + Depends on how much control one can assert over Keynote, see 'Controlling Keynote' below

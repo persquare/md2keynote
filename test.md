@@ -1,6 +1,8 @@
-Title:  Test
-File : ~/Documents/test2.key
-Author: Per
+Date   : 2016-04-04
+Theme  : White
+File   : ~/Documents/test2.key
+Author : Per Persson
+
 
 # Title & Subtitle
 
