@@ -104,11 +104,13 @@ class KeynoteRenderer(mistune.Renderer):
     def new_blank_slide(self):
         master = 'Blank'
         self.keynote.createSlide(self.doc, master)
+        self.add_notes(master)
 
     def new_title_center_slide(self):
         master = 'Title - Center'
         self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
+        self.add_notes(master)
 
     def new_photo_slide(self):
         if len(self._state['images']) == 1:
@@ -119,29 +121,34 @@ class KeynoteRenderer(mistune.Renderer):
         images = self._state['images']
         for n in range(0, min(len(images), 3)):
             self.keynote.addImage(self.doc, self._count, n+1, images[-(n+1)][0])
+        self.add_notes(master)
 
     def new_quote_slide(self):
         master = 'Quote'
         self.keynote.createSlide(self.doc, master)
         self.keynote.addText(self.doc, self._count, 2, self._state['quote'])
         self.keynote.addText(self.doc, self._count, 1, self._paragraphs[1])
+        self.add_notes(master)
 
     def new_bullet_slide(self):
         master = 'Bullets'
         self.keynote.createSlide(self.doc, master)
         self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
+        self.add_notes(master)
 
     def new_title_subtitle_slide(self):
         master = 'Title & Subtitle'
         self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, self._state['subtitle'])
+        self.add_notes(master)
 
     def new_title_bullets_slide(self):
         master = 'Title & Bullets'
         self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
+        self.add_notes(master)
 
     def new_title_bullets_photo_slide(self):
         master = 'Title, Bullets & Photo'
@@ -149,6 +156,7 @@ class KeynoteRenderer(mistune.Renderer):
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
         self.keynote.addImage(self.doc, self._count, 1, self._state['images'][0][0])
+        self.add_notes(master)
 
     def new_title_photo_slide(self):
         if self._order == ['title', 'image', 'subtitle']:
@@ -159,6 +167,30 @@ class KeynoteRenderer(mistune.Renderer):
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, self._state['subtitle'])
         self.keynote.addImage(self.doc, self._count, 1, self._state['images'][0][0])
+        self.add_notes(master)
+
+    def add_notes(self, master):
+        start_index = {
+            'Photo - 3 Up': 0,
+            'Photo': 0,
+            'Blank': 0,
+            'Bullets': 0,
+            'Title - Center': 1,
+            'Title - Top': 1,
+            'Title & Bullets': 1,
+            'Title, Bullets & Photo': 1,
+            'Title & Subtitle': 2,
+            'Photo - Horizontal': 2,
+            'Photo - Vertical': 2,
+            'Quote': 2
+        }.get(master)
+
+        # Bullets counts as paragraphs
+        start_index += len(self._state.get('bullets', []))
+        notes = self._paragraphs[start_index:]
+        if notes:
+            self.keynote.addPresenterNotes(self.doc, self._count, "\n\n".join(notes))
+
 
     def block_code(self, code, lang=None):
         """Rendering block level code. ``pre > code``.
