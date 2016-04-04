@@ -1,5 +1,5 @@
-Title:  Hello
-File :   /Users/per/Documents/test88.key 
+Title:  Test
+File : ~/Documents/test2.key
 Author: Per
 
 # Title & Subtitle
@@ -8,15 +8,19 @@ Author: Per
 
 Notes
 
+More notes
+
 ----
 
 # Photo - Horizontal
 
-![alt text](/Users/per/Desktop/bild.png "Img title")
+![alt text][1]
 
 ## Subtitle
 
 Notes
+
+More notes
 
 ----
 
@@ -25,13 +29,15 @@ Notes
 
 Notes
 
+More notes
+
 ----
 
 # Photo - Vertical
 
 ## Subtitle
 
-![alt text](/Users/per/Desktop/bild.png "Img title")
+![alt text][1]
 
 Notes
 
@@ -42,23 +48,35 @@ More notes
 
 # Title - Top
 
-----  
+Notes
 
-
-# Title & Bullets  
-
-- item 1
-- item 2
+More notes
 
 ----
 
 
-# Title, Bullets & Photo  
+# Title & Bullets
 
 - item 1
 - item 2
 
-![alt text](/Users/per/Desktop/bild.png "Img title")
+Notes
+
+More notes
+
+----
+
+
+# Title, Bullets & Photo
+
+- item 1
+- item 2
+
+![alt text][1]
+
+Notes
+
+More notes
 
 ----
 
@@ -66,14 +84,25 @@ More notes
 - bullet 1
 - bullet 2
 
-----
+Notes
 
-
-![alt text](/Users/per/Desktop/bild.png "Photo - 3 Up")
-![alt text](/Users/per/Desktop/bild.png "Photo - 3 Up")
-![alt text](/Users/per/Desktop/bild.png "Photo - 3 Up")
+More notes
 
 ----
+
+
+![alt text][1]
+
+![alt text][2]
+
+![alt text][3]
+
+Notes
+
+More notes
+
+----
+
 
 > a quote
 
@@ -86,14 +115,23 @@ More notes
 ----
 
 
-![alt text](/Users/per/Desktop/bild.png "Photo")
+![alt text][1]
+
+Notes
+
+More notes
 
 ----
 
+Notes
+
+More notes
 
 ----
 
-[1]: /Users/per/Desktop/bild.png "Text"
+[1]: ~/Desktop/raven.png "Text"
+[2]: ~/Desktop/raven2.jpg "Text"
+[3]: ~/Desktop/raven3.jpg "Text"
 
 
-<!--![alt text](/Users/per/Desktop/bild.png "Img title")-->
+<!--![alt text](~/Desktop/raven.jpg "Img title")-->
