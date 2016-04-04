@@ -118,7 +118,7 @@ class KeynoteRenderer(mistune.Renderer):
         self.keynote.createSlide(self.doc, master)
         images = self._state['images']
         for n in range(0, min(len(images), 3)):
-            self.keynote.addImage(self.doc, self._count, n+1, images[n][0])
+            self.keynote.addImage(self.doc, self._count, n+1, images[-(n+1)][0])
 
     def new_quote_slide(self):
         master = 'Quote'
