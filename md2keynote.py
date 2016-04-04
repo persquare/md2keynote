@@ -39,12 +39,13 @@ def preprocess(file):
 class KeynoteRenderer(mistune.Renderer):
     """The default HTML renderer for rendering Markdown.
     """
-    def __init__(self, keynote, doc, **kwargs):
+    def __init__(self, keynote, doc, options=None, **kwargs):
         super(KeynoteRenderer, self).__init__(**kwargs)
         self.keynote = keynote
         self.doc = doc
         self._count = 1 # Starts with a dummy slide
         self._reset_state()
+        self._options = options or {}
 
     def _reset_state(self):
         self._state = {}
@@ -125,9 +126,12 @@ class KeynoteRenderer(mistune.Renderer):
 
     def new_quote_slide(self):
         master = 'Quote'
+        quote_index, attr_index = 2, 1
+        if self._options.get('flip_quote', False):
+            quote_index, attr_index = attr_index, quote_index
         self.keynote.createSlide(self.doc, master)
-        self.keynote.addText(self.doc, self._count, 2, self._state['quote'])
-        self.keynote.addText(self.doc, self._count, 1, self._paragraphs[1])
+        self.keynote.addText(self.doc, self._count, quote_index, self._state['quote'])
+        self.keynote.addText(self.doc, self._count, attr_index, self._paragraphs[1])
         self.add_notes(master)
 
     def new_bullet_slide(self):
@@ -393,34 +397,17 @@ if __name__ == '__main__':
         source = f.read().decode('utf-8')
     keynote = OSAScript(source)
 
-    meta, text =  preprocess("test.md")
-    doc = keynote.newPresentation("White")
-    md = mistune.Markdown(renderer=KeynoteRenderer(keynote, doc))
-    result = md.parse(text)
+    meta, text =  preprocess("test2.md")
+    theme = meta.get('Theme', 'White')
+    doc = keynote.newPresentation(theme)
+    options = {}
+    if theme in ["Modern Type", "Parchment", "Blueprint", "Graph Paper", "Craft", "Exhibition", "Editorial"]:
+        options['flip_quote'] = True
+    md = mistune.Markdown(renderer=KeynoteRenderer(keynote, doc, options=options))
+    md.parse(text)
     keynote.finalize(doc)
     if 'File' in meta:
         keynote.savePresentation(doc, meta['File'])
         keynote.openPresentation(meta['File'])
-
-    #
-# if __name__ == '__main__':
-#
-#     with open("keynote.applescript") as f:
-#         source = f.read().decode('utf-8')
-#
-#     keynote = OSAScript(source)
-#     doc = keynote.newPresentation("White")
-#     # print keynote.themeMasters(doc)
-#     slide = keynote.createSlide(doc, "Title & Subtitle")
-#     keynote.addTitle(doc, "Foo is the new Bar", "Per Persson")
-#     keynote.addBody(doc, "Per Persson")
-#
-#     slide = keynote.createSlide(doc, "Title, Bullets & Photo")
-#     keynote.addTitle(doc, "My items")
-#     keynote.addBody(doc, "item 1\nitem 2")
-#     keynote.addImage(doc, "/Users/per/Desktop/bild.png")
-#     keynote.finalize(doc)
-#     # keynote.deleteAllSlides(doc)
-#     keynote.savePresentation(doc, "/Users/per/Documents/test88.key")
 
 
