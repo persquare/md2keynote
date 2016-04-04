@@ -66,9 +66,6 @@ on themeMasters(docId)
 end themeMasters
 
 on addImage(docId, slideIndex, n, filepath)
-  (*
-	FIXME: Use slide ID to adress slide instead of "current slide"
-  *)
   tell application "Keynote"
 	tell slide slideIndex of document id docId
 		-- TO REPLACE A PLACEHOLDER OR EXISTING IMAGE:
@@ -83,9 +80,6 @@ end addImage
 
 
 on addTitle(docId, slideIndex, thisSlideTitle)
-  (*
-	FIXME: Use slide ID to adress slide instead of "current slide"
-  *)
 	tell application "Keynote"
     	tell slide slideIndex of document id docId
 			set the object text of the default title item to thisSlideTitle
@@ -94,9 +88,6 @@ on addTitle(docId, slideIndex, thisSlideTitle)
 end addTitle
 
 on addBody(docId, slideIndex, thisSlideBody)
-  (*
-	FIXME: Use slide ID to adress slide instead of "current slide"
-  *)
 	tell application "Keynote"
     	tell slide slideIndex of document id docId
             set the object text of the default body item to thisSlideBody
@@ -104,9 +95,6 @@ on addBody(docId, slideIndex, thisSlideBody)
 	end tell
 end addTitle
 
-    (*
-  	FIXME: Use slide ID to adress slide instead of "current slide"
-    *)
 on addPresenterNotes(docId, slideIndex, theNotes)
 	tell application "Keynote"
     	tell slide slideIndex of document id docId
@@ -116,9 +104,6 @@ on addPresenterNotes(docId, slideIndex, theNotes)
 end addPresenterNotes
 
 on addText(docId, slideIndex, n, theText)
-  (*
-	FIXME: Use slide ID to adress slide instead of "current slide"
-  *)
   tell application "Keynote"
   	tell slide slideIndex of document id docId
 		set thisPlaceholderItem to text item n
