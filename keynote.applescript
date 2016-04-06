@@ -42,6 +42,7 @@ on createSlide(docId, masterSlideName)
 		tell document id docId
 			set thisSlide to make new slide with properties {base slide:master slide masterSlideName}
 		end tell
+		return slide number of thisSlide
 	end tell
 end createSlide
 
