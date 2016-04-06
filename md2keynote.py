@@ -16,7 +16,8 @@ def preprocess(file):
     lines = []
     with open(file) as f:
         in_metadata = True
-        for line in f:
+        for raw_line in f:
+            line = raw_line.decode('utf-8')
             if in_metadata:
                 m = re.match(METADATA, line)
                 if (m):
