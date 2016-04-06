@@ -113,3 +113,34 @@ on addText(docId, slideIndex, itemIndex, theText)
   end tell
 end addText
 
+on addStyledTextItem(docId, slideIndex, theText, theStyleList, thePosition, theSize, theFont)
+	tell application "Keynote"
+		tell slide slideIndex of document id docId
+			set thisTextItem to make new text item with properties {object text:theText}
+			tell thisTextItem
+				-- set type size
+				set the size of its object text to theSize
+				-- set typeface
+				set the font of its object text to theFont
+				-- adjust its vertical positon
+				set its position to thePosition
+				-- style the text
+				repeat with i from 1 to my min(the length of theStyleList, the length of theText)
+					set thisRGBColorValue to item i of theStyleList
+					set the color of character i of object text to thisRGBColorValue
+				end repeat
+			end tell
+		end tell
+	end tell
+end addStyledTextItem
+
+on min(a, b)
+	if a < b then
+		set x to a
+	else
+		set x to b
+	end if
+	return x
+end min
+
+

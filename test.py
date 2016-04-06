@@ -18,12 +18,14 @@ if __name__ == '__main__':
     # keynote.addTitle(doc, "My items")
     # keynote.addBody(doc, "item 1\nitem 2")
     # keynote.addImage(doc, "/Users/per/Desktop/bild.png")
-    keynote.createSlide(doc, "Quote")
-    keynote.addText(doc, 1, "QE2")
-    keynote.addText(doc, 2, "\"Keep Calm\"")
-    keynote.addPresenterNotes(doc, "XYZ")
+    index = keynote.createSlide(doc, "Quote")
+    keynote.addText(doc, index, 1, "QE2")
+    keynote.addText(doc, index, 2, "\"Keep Calm\"")
+    # Use [] for no styling
+    keynote.addStyledTextItem(doc, index, "theText", [(65535,0,0), (0,65535,0), (0,0,65535)], (100, 200), 36, "Menlo")
+    keynote.addPresenterNotes(doc, index, "XYZ")
     keynote.finalize(doc)
     # keynote.deleteAllSlides(doc)
-    keynote.savePresentation(doc, "/Users/per/Documents/test88.key")
+    keynote.savePresentation(doc, "/Users/eperspe/Documents/test88.key")
 
-   
+
