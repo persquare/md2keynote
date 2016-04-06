@@ -125,6 +125,13 @@ More notes
 
 ----
 
+    Block code
+    monospace text
+
+```python
+print "Hello fenced code"
+```
+
 Notes
 
 More notes

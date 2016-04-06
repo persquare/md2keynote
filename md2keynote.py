@@ -4,6 +4,10 @@ import os
 import re
 import mistune
 from applescripting import OSAScript
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name
+from pygments.formatter import Formatter
+
 
 METADATA = r'^\s*(\w+)\s*:\s*(.*?)\s*$'
 
@@ -37,6 +41,35 @@ def preprocess(file):
     return meta, text
 
 
+class RunFormatter(Formatter):
+    def __init__(self, **options):
+        Formatter.__init__(self, **options)
+        # create a dict of (start, end) tuples that wrap the
+        # value of a token so that we can use it in the format
+        # method later
+        self.styles = {}
+        for token, style in self.style:
+            # a style item is a tuple in the following form:
+            # colors are readily specified in hex: 'RRGGBB'
+            if style['color']:
+                 self.styles[token] =  style['color']
+
+    def format(self, tokensource, outfile):
+        for ttype, value in tokensource:
+            while ttype and ttype not in self.styles:
+                ttype = ttype.parent
+            outfile.write(len(value) * self.styles.get(ttype, "000000"))
+
+def rgb_to_ASRGB(rgb):
+    asrgb = tuple([257*int(rgb[i:i+2], 16) for i in range(0, len(rgb), 2)])
+    return asrgb
+
+def run_to_ASRGB(run):
+    return [rgb_to_ASRGB(run[i:i+6]) for i in range(0, len(run), 6)]
+
+
+
+
 class KeynoteRenderer(mistune.Renderer):
     """The default HTML renderer for rendering Markdown.
     """
@@ -59,6 +92,8 @@ class KeynoteRenderer(mistune.Renderer):
 
         keys = self._state.keys()
         key_count = len(keys)
+        if 'code' in self._state:
+            key_count -= 1
 
         handler = self.malformed_slide
         if key_count == 0:
@@ -106,12 +141,14 @@ class KeynoteRenderer(mistune.Renderer):
     def new_blank_slide(self):
         master = 'Blank'
         self.keynote.createSlide(self.doc, master)
+        self.add_code()
         self.add_notes(master)
 
     def new_title_center_slide(self):
         master = 'Title - Center'
         self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
+        self.add_code()
         self.add_notes(master)
 
     def new_photo_slide(self):
@@ -123,6 +160,7 @@ class KeynoteRenderer(mistune.Renderer):
         images = self._state['images']
         for n in range(0, min(len(images), 3)):
             self.keynote.addImage(self.doc, self._count, n+1, images[-(n+1)][0])
+        self.add_code()
         self.add_notes(master)
 
     def new_quote_slide(self):
@@ -133,12 +171,14 @@ class KeynoteRenderer(mistune.Renderer):
         self.keynote.createSlide(self.doc, master)
         self.keynote.addText(self.doc, self._count, quote_index, self._state['quote'])
         self.keynote.addText(self.doc, self._count, attr_index, self._paragraphs[1])
+        self.add_code()
         self.add_notes(master)
 
     def new_bullet_slide(self):
         master = 'Bullets'
         self.keynote.createSlide(self.doc, master)
         self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
+        self.add_code()
         self.add_notes(master)
 
     def new_title_subtitle_slide(self):
@@ -146,6 +186,7 @@ class KeynoteRenderer(mistune.Renderer):
         self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, self._state['subtitle'])
+        self.add_code()
         self.add_notes(master)
 
     def new_title_bullets_slide(self):
@@ -153,6 +194,7 @@ class KeynoteRenderer(mistune.Renderer):
         self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
+        self.add_code()
         self.add_notes(master)
 
     def new_title_bullets_photo_slide(self):
@@ -161,6 +203,7 @@ class KeynoteRenderer(mistune.Renderer):
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
         self.keynote.addImage(self.doc, self._count, 1, self._state['images'][0][0])
+        self.add_code()
         self.add_notes(master)
 
     def new_title_photo_slide(self):
@@ -172,7 +215,20 @@ class KeynoteRenderer(mistune.Renderer):
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, self._state['subtitle'])
         self.keynote.addImage(self.doc, self._count, 1, self._state['images'][0][0])
+        self.add_code()
         self.add_notes(master)
+
+    def add_code(self):
+        if not 'code' in self._state:
+            return
+        x, y = 0, 0
+        fontsize = self._options.get('CodeFontSize', 18)
+        fontname = self._options.get('CodeFont', 'Menlo')
+
+        for code, styling in self._state['code']:
+            x += 100
+            y += 100
+            self.keynote.addStyledTextItem(self.doc, self._count, code, styling, (x, y), fontsize, fontname)
 
     def add_notes(self, master):
         start_index = {
@@ -203,7 +259,17 @@ class KeynoteRenderer(mistune.Renderer):
         :param code: text content of the code block.
         :param lang: language of the given code.
         """
-        return 'block_code\n'
+        code = code.rstrip()
+        try:
+            lexer = get_lexer_by_name(lang, stripall=False)
+            run = highlight(code, lexer, RunFormatter())
+            styling = run_to_ASRGB(run)
+        except:
+            styling = []
+        self._state.setdefault('code', [])
+        self._state['code'].append([code, styling])
+
+        return ''
 
     def block_quote(self, text):
         """Rendering <blockquote> with the given text.
@@ -398,7 +464,7 @@ if __name__ == '__main__':
         source = f.read().decode('utf-8')
     keynote = OSAScript(source)
 
-    meta, text =  preprocess("test2.md")
+    meta, text =  preprocess("test.md")
     theme = meta.get('Theme', 'White')
     doc = keynote.newPresentation(theme)
     options = {}
