@@ -12,13 +12,14 @@ Markdown syntax:
   - footer
   - autoplay
   - automatic export
+  - monospace font
   See http://hiltmon.com/blog/2012/06/18/markdown-metadata/
 - Simple animation annotation?
 
 Markdown parsing:
 
 Controlling Keynote:
-- Body text attributes?
++ Body text attributes?
   Great for syntax highlighted code
   See https://iworkautomation.com/keynote/text-item-styling.html
 - Tables and charts
