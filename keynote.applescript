@@ -103,10 +103,10 @@ on addPresenterNotes(docId, slideIndex, theNotes)
 	end tell
 end addPresenterNotes
 
-on addText(docId, slideIndex, n, theText)
+on addText(docId, slideIndex, itemIndex, theText)
   tell application "Keynote"
   	tell slide slideIndex of document id docId
-		set thisPlaceholderItem to text item n
+		set thisPlaceholderItem to text item itemIndex
 		set object text of thisPlaceholderItem to theText
 	end tell
   end tell
