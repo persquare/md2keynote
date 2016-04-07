@@ -1,6 +1,5 @@
 on newPresentation(themeName)
 	tell application "Keynote"
-		activate
 		-- FIXME: Make this selectable?
 		set targetWidth to 1024 -- 1440 <-- higher resolution
 		set targetHeight to 768 -- 1080 <-- higher resolution
@@ -20,7 +19,6 @@ end openPresentation
 
 on savePresentation(docId, posixPath)
 	tell application "Keynote"	
-		activate	
         set theDocument to document id docId
 		save theDocument in POSIX file posixPath
         delete theDocument
@@ -30,7 +28,6 @@ end savePresentation
 
 on closePresentation(docId)
 	tell application "Keynote"	
-		activate	
         set theDocument to document id docId
 		close theDocument
 	end tell
