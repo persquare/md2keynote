@@ -2,6 +2,7 @@
 
 import os
 import re
+import copy
 import mistune
 from applescripting import OSAScript
 from pygments import highlight
@@ -73,13 +74,18 @@ def run_to_ASRGB(run):
 class KeynoteRenderer(mistune.Renderer):
     """The default HTML renderer for rendering Markdown.
     """
+
     def __init__(self, keynote, doc, options=None, **kwargs):
         super(KeynoteRenderer, self).__init__(**kwargs)
         self.keynote = keynote
         self.doc = doc
         self._count = 1 # Starts with a dummy slide
         self._reset_state()
-        self._options = options or {}
+        self._options = options or self.defaults()
+
+    @staticmethod
+    def defaults():
+        return copy.copy({'CodeFont': 'Menlo', 'CodeFontSize': 16, '_FlipQuote': False})
 
     def _reset_state(self):
         self._state = {}
@@ -166,7 +172,7 @@ class KeynoteRenderer(mistune.Renderer):
     def new_quote_slide(self):
         master = 'Quote'
         quote_index, attr_index = 2, 1
-        if self._options.get('flip_quote', False):
+        if self._options.get('_FlipQuote', False):
             quote_index, attr_index = attr_index, quote_index
         self.keynote.createSlide(self.doc, master)
         self.keynote.addText(self.doc, self._count, quote_index, self._state['quote'])
@@ -467,10 +473,17 @@ if __name__ == '__main__':
     meta, text =  preprocess("test.md")
     theme = meta.get('Theme', 'White')
     doc = keynote.newPresentation(theme)
-    options = {}
+
+    options = KeynoteRenderer.defaults()
+    # Handle buggy templates
     if theme in ["Modern Type", "Parchment", "Blueprint", "Graph Paper", "Craft", "Exhibition", "Editorial"]:
-        options['flip_quote'] = True
-    md = mistune.Markdown(renderer=KeynoteRenderer(keynote, doc, options=options))
+        options['_FlipQuote'] = True
+    # Get user options from markdown metadata
+    known_options = options.keys()
+    user_options = {x: meta[x] for x in known_options if x in meta}
+    options.update(user_options)
+
+    md = mistune.Markdown(renderer=KeynoteRenderer(keynote, doc, options))
     md.parse(text)
     keynote.finalize(doc)
     if 'File' in meta:
