@@ -1,3 +1,9 @@
+Tasks:
+- Pygment formatter for CalvinScript
+- Turn into proper CLI tool
+- get rid of _count, use return value from createNewSlide()
+- Allow code to be used in place of images, get position from image placeholder
+
 Custom Theme:
   See https://iworkautomation.com/keynote/theme.html
 - Provide master slides for all standard names
