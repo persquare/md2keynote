@@ -110,6 +110,18 @@ on addText(docId, slideIndex, itemIndex, theText)
   end tell
 end addText
 
+on addStyledTextItemAsMedia(docId, slideIndex, mediaIndex, theText, theStyleList, theSize, theFont)
+	tell application "Keynote"
+		tell slide slideIndex of document id docId
+            set thisImage to image mediaIndex
+            -- copy {position:position of thisImage, width:width of thisImage, height:height of thisImage} to info
+            copy position of thisImage to thePosition
+            delete thisImage
+        end tell        
+    end tell    
+    my addStyledTextItem(docId, slideIndex, theText, theStyleList, thePosition, theSize, theFont)
+end addStyledTextItemAsMedia
+
 on addStyledTextItem(docId, slideIndex, theText, theStyleList, thePosition, theSize, theFont)
 	tell application "Keynote"
 		tell slide slideIndex of document id docId

@@ -96,8 +96,6 @@ class KeynoteRenderer(mistune.Renderer):
 
         keys = self._state.keys()
         key_count = len(keys)
-        if 'code' in self._state:
-            key_count -= 1
 
         handler = self.malformed_slide
         if key_count == 0:
@@ -105,7 +103,7 @@ class KeynoteRenderer(mistune.Renderer):
         elif key_count == 1:
             handler = {
                 'title': self.new_title_center_slide,
-                'images': self.new_photo_slide,
+                'media': self.new_photo_slide,
                 'quote': self.new_quote_slide,
                 'bullets' : self.new_bullet_slide
             }.get(keys[0], self.malformed_slide)
@@ -116,7 +114,7 @@ class KeynoteRenderer(mistune.Renderer):
                 elif 'bullets' in keys:
                     handler = self.new_title_bullets_slide
         elif key_count == 3:
-            if 'title' in keys and 'images' in keys:
+            if 'title' in keys and 'media' in keys:
                 if 'subtitle' in keys:
                     handler = self.new_title_photo_slide
                 elif 'bullets' in keys:
@@ -145,26 +143,27 @@ class KeynoteRenderer(mistune.Renderer):
     def new_blank_slide(self):
         master = 'Blank'
         self._count = self.keynote.createSlide(self.doc, master)
-        self.add_code()
         self.add_notes(master)
 
     def new_title_center_slide(self):
         master = 'Title - Center'
         self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
-        self.add_code()
         self.add_notes(master)
 
     def new_photo_slide(self):
-        if len(self._state['images']) == 1:
+        if len(self._state['media']) == 1:
             master = 'Photo'
+            i = 1
         else:
             master = 'Photo - 3 Up'
+            i = 3
         self._count = self.keynote.createSlide(self.doc, master)
-        images = self._state['images']
-        for n in range(0, min(len(images), 3)):
-            self.keynote.addImage(self.doc, self._count, n+1, images[-(n+1)][0])
-        self.add_code()
+        media = self._state['media'][0:3]
+        # Must iterate backwards since we might delete placeholder images if media is not image
+        for m in media:
+            self.add_media(i, m)
+            i -= 1
         self.add_notes(master)
 
     def new_quote_slide(self):
@@ -175,14 +174,12 @@ class KeynoteRenderer(mistune.Renderer):
         self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addText(self.doc, self._count, quote_index, self._state['quote'])
         self.keynote.addText(self.doc, self._count, attr_index, self._paragraphs[1])
-        self.add_code()
         self.add_notes(master)
 
     def new_bullet_slide(self):
         master = 'Bullets'
         self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
-        self.add_code()
         self.add_notes(master)
 
     def new_title_subtitle_slide(self):
@@ -190,7 +187,6 @@ class KeynoteRenderer(mistune.Renderer):
         self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, self._state['subtitle'])
-        self.add_code()
         self.add_notes(master)
 
     def new_title_bullets_slide(self):
@@ -198,7 +194,6 @@ class KeynoteRenderer(mistune.Renderer):
         self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
-        self.add_code()
         self.add_notes(master)
 
     def new_title_bullets_photo_slide(self):
@@ -206,8 +201,7 @@ class KeynoteRenderer(mistune.Renderer):
         self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
-        self.keynote.addImage(self.doc, self._count, 1, self._state['images'][0][0])
-        self.add_code()
+        self.add_media(1, self._state['media'][0])
         self.add_notes(master)
 
     def new_title_photo_slide(self):
@@ -218,21 +212,34 @@ class KeynoteRenderer(mistune.Renderer):
         self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, self._state['subtitle'])
-        self.keynote.addImage(self.doc, self._count, 1, self._state['images'][0][0])
-        self.add_code()
+        self.add_media(1, self._state['media'][0])
         self.add_notes(master)
 
-    def add_code(self):
-        if not 'code' in self._state:
-            return
-        x, y = 0, 0
-        fontsize = self._options.get('CodeFontSize', 18)
-        fontname = self._options.get('CodeFont', 'Menlo')
 
-        for code, styling in self._state['code']:
-            x += 100
-            y += 100
-            self.keynote.addStyledTextItem(self.doc, self._count, code, styling, (x, y), fontsize, fontname)
+    def add_media(self, placeholderIndex, media):
+        if len(media) == 3:
+            # media is image
+            self.keynote.addImage(self.doc, self._count, placeholderIndex, media[0])
+        else:
+            # media is code
+            fontsize = self._options.get('CodeFontSize', 18)
+            fontname = self._options.get('CodeFont', 'Menlo')
+            source, style = media
+            self.keynote.addStyledTextItemAsMedia(self.doc, self._count, placeholderIndex, source, style, fontsize, fontname)
+
+
+    # def add_code(self):
+    #     if not 'code' in self._state:
+    #         return
+    #     x, y = 0, 0
+    #     fontsize = self._options.get('CodeFontSize', 18)
+    #     fontname = self._options.get('CodeFont', 'Menlo')
+    #
+    #     for code, styling in self._state['code']:
+    #         x += 100
+    #         y += 100
+    #         self.keynote.addStyledTextItem(self.doc, self._count, code, styling, (x, y), fontsize, fontname)
+
 
     def add_notes(self, master):
         start_index = {
@@ -270,9 +277,9 @@ class KeynoteRenderer(mistune.Renderer):
             styling = run_to_ASRGB(run)
         except:
             styling = []
-        self._state.setdefault('code', [])
-        self._state['code'].append([code, styling])
-
+        self._state.setdefault('media', [])
+        self._state['media'].append([code, styling])
+        self._order.append('media')
         return ''
 
     def block_quote(self, text):
@@ -419,8 +426,8 @@ class KeynoteRenderer(mistune.Renderer):
         :param title: title text of the image.
         :param text: alt text of the image.
         """
-        self._state.setdefault('images', [])
-        self._state['images'].append([process_path(src), title, text])
+        self._state.setdefault('media', [])
+        self._state['media'].append([process_path(src), title, text])
         self._order.append('image')
         return ''
 
