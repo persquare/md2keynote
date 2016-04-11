@@ -1,45 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import os
-import re
 import copy
 import mistune
-from applescripting import OSAScript
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatter import Formatter
+from applescripting import OSAScript
 
-
-METADATA = r'^\s*(\w+)\s*:\s*(.*?)\s*$'
 
 def process_path(path):
     return os.path.abspath(os.path.expandvars(os.path.expanduser(path)))
-
-def preprocess(file):
-    path_keys = ['File']
-    meta = {}
-    lines = []
-    with open(file) as f:
-        in_metadata = True
-        for raw_line in f:
-            line = raw_line.decode('utf-8')
-            if in_metadata:
-                m = re.match(METADATA, line)
-                if (m):
-                    key = m.group(1)
-                    value = m.group(2)
-                    meta[key] = value
-                else:
-                    in_metadata = False
-            if not in_metadata:
-                lines.append(line)
-        text = "".join(lines)
-    # Process paths
-    for key in path_keys:
-        if key in meta:
-            meta[key] = process_path(meta[key])
-
-    return meta, text
 
 
 class RunFormatter(Formatter):
@@ -467,32 +438,5 @@ class KeynoteRenderer(mistune.Renderer):
 
 
 
-
-
-if __name__ == '__main__':
-
-    with open("keynote.applescript") as f:
-        source = f.read().decode('utf-8')
-    keynote = OSAScript(source)
-
-    meta, text =  preprocess("test.md")
-    theme = meta.get('Theme', 'White')
-    doc = keynote.newPresentation(theme)
-
-    options = KeynoteRenderer.defaults()
-    # Handle buggy templates
-    if theme in ["Modern Type", "Parchment", "Blueprint", "Graph Paper", "Craft", "Exhibition", "Editorial"]:
-        options['_FlipQuote'] = True
-    # Get user options from markdown metadata
-    known_options = options.keys()
-    user_options = {x: meta[x] for x in known_options if x in meta}
-    options.update(user_options)
-
-    md = mistune.Markdown(renderer=KeynoteRenderer(keynote, doc, options))
-    md.parse(text)
-    keynote.finalize(doc)
-    if 'File' in meta:
-        keynote.savePresentation(doc, meta['File'])
-        keynote.openPresentation(meta['File'])
 
 
