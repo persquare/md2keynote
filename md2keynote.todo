@@ -1,8 +1,6 @@
 Tasks:
-- Pygment formatter for CalvinScript
 - Turn into proper CLI tool
-- get rid of _count, use return value from createNewSlide()
-- Allow code to be used in place of images, get position from image placeholder
+- renderer for PPT?
 
 Custom Theme:
   See https://iworkautomation.com/keynote/theme.html
@@ -25,9 +23,6 @@ Markdown syntax:
 Markdown parsing:
 
 Controlling Keynote:
-+ Body text attributes?
-  Great for syntax highlighted code
-  See https://iworkautomation.com/keynote/text-item-styling.html
 - Tables and charts
   See https://iworkautomation.com/keynote/chart-table.html
 - How to add links?
@@ -35,6 +30,13 @@ Controlling Keynote:
 
 
 Archive:
+---- 2016-04-11 16:40:48 ----
++ Pygment formatter for CalvinScript
++ get rid of _count, use return value from createNewSlide()
++ Allow code to be used in place of images, get position from image placeholder
++ Body text attributes?
+Great for syntax highlighted code
+See https://iworkautomation.com/keynote/text-item-styling.html
 ---- 2016-04-04 18:45:27 ----
 + theme
 + file location,
