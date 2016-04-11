@@ -79,7 +79,6 @@ class KeynoteRenderer(mistune.Renderer):
         super(KeynoteRenderer, self).__init__(**kwargs)
         self.keynote = keynote
         self.doc = doc
-        self._count = 1 # Starts with a dummy slide
         self._reset_state()
         self._options = options or self.defaults()
 
@@ -94,7 +93,6 @@ class KeynoteRenderer(mistune.Renderer):
 
 
     def new_slide(self):
-        self._count += 1
 
         keys = self._state.keys()
         key_count = len(keys)
@@ -146,13 +144,13 @@ class KeynoteRenderer(mistune.Renderer):
 
     def new_blank_slide(self):
         master = 'Blank'
-        self.keynote.createSlide(self.doc, master)
+        self._count = self.keynote.createSlide(self.doc, master)
         self.add_code()
         self.add_notes(master)
 
     def new_title_center_slide(self):
         master = 'Title - Center'
-        self.keynote.createSlide(self.doc, master)
+        self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.add_code()
         self.add_notes(master)
@@ -162,7 +160,7 @@ class KeynoteRenderer(mistune.Renderer):
             master = 'Photo'
         else:
             master = 'Photo - 3 Up'
-        self.keynote.createSlide(self.doc, master)
+        self._count = self.keynote.createSlide(self.doc, master)
         images = self._state['images']
         for n in range(0, min(len(images), 3)):
             self.keynote.addImage(self.doc, self._count, n+1, images[-(n+1)][0])
@@ -174,7 +172,7 @@ class KeynoteRenderer(mistune.Renderer):
         quote_index, attr_index = 2, 1
         if self._options.get('_FlipQuote', False):
             quote_index, attr_index = attr_index, quote_index
-        self.keynote.createSlide(self.doc, master)
+        self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addText(self.doc, self._count, quote_index, self._state['quote'])
         self.keynote.addText(self.doc, self._count, attr_index, self._paragraphs[1])
         self.add_code()
@@ -182,14 +180,14 @@ class KeynoteRenderer(mistune.Renderer):
 
     def new_bullet_slide(self):
         master = 'Bullets'
-        self.keynote.createSlide(self.doc, master)
+        self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
         self.add_code()
         self.add_notes(master)
 
     def new_title_subtitle_slide(self):
         master = 'Title & Subtitle'
-        self.keynote.createSlide(self.doc, master)
+        self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, self._state['subtitle'])
         self.add_code()
@@ -197,7 +195,7 @@ class KeynoteRenderer(mistune.Renderer):
 
     def new_title_bullets_slide(self):
         master = 'Title & Bullets'
-        self.keynote.createSlide(self.doc, master)
+        self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
         self.add_code()
@@ -205,7 +203,7 @@ class KeynoteRenderer(mistune.Renderer):
 
     def new_title_bullets_photo_slide(self):
         master = 'Title, Bullets & Photo'
-        self.keynote.createSlide(self.doc, master)
+        self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
         self.keynote.addImage(self.doc, self._count, 1, self._state['images'][0][0])
@@ -217,7 +215,7 @@ class KeynoteRenderer(mistune.Renderer):
             master = 'Photo - Horizontal'
         else:
             master = 'Photo - Vertical'
-        self.keynote.createSlide(self.doc, master)
+        self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, self._state['subtitle'])
         self.keynote.addImage(self.doc, self._count, 1, self._state['images'][0][0])
