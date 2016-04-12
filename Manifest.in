@@ -1,1 +1,4 @@
+include README.md
 include md2keynote/helpers/keynote.applescript
+include examples/*.md
+include examples/*.png

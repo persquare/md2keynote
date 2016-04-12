@@ -7,6 +7,7 @@ setup(name='md2keynote',
           'md2keynote/md2keynote',
           'md2keynote/md2key'
       ],
+      packages=['md2keynote'],
       package_data={
           'md2keynote':['md2keynote/helpers/keynote.applescript']
       },
