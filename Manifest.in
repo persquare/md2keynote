@@ -1,1 +1,1 @@
-include md2keynote/keynote.applescript
+include md2keynote/helpers/keynote.applescript

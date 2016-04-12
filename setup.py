@@ -1,16 +1,19 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(name='md2keynote',
       version='0.1',
       py_modules=[
           'md2keynote/applescripting',
-          'md2keynote/md2keynote'
+          'md2keynote/md2keynote',
+          'md2keynote/md2key'
       ],
       package_data={
-          'md2keynote':['md2keynote/keynote.applescript']
+          'md2keynote':['md2keynote/helpers/keynote.applescript']
       },
       include_package_data=True,
-      scripts=[
-          'md2key'
-      ]
+      entry_points={
+          'console_scripts': [
+              'md2key=md2keynote.md2key:main',
+              ]
+        }
 )

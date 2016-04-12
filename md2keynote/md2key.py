@@ -38,7 +38,7 @@ def preprocess(file):
     return meta, text
 
 
-if __name__ == '__main__':
+def main():
 
     if len(sys.argv) != 2:
         print 'Usage:\n\t{} <file>\n'.format(sys.argv[0])
@@ -69,3 +69,5 @@ if __name__ == '__main__':
         keynote.openPresentation(meta['File'])
 
 
+if __name__ == '__main__':
+    sys.exit(main())
