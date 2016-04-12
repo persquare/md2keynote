@@ -18,19 +18,20 @@ CodeFontSize : 18
 - item list becomes bullets
 - image link and code becomes image
 - quote + text becomes quote + attribution 
-- horisontal line marks end of slide
 - text paragraphs becomes presenters notes
-
+- horisontal line marks end of slide
+- master selected based on slide content
 
         # Map markdown to content
         
-        - heading 1 becomes title
-        - heading 2 becomes subtitle
-        - item list becomes bullets
-        - image link and code becomes image
-        - quote + text becomes quote + attribution 
-        - horisontal line marks end of slide
-        - text paragraphs becomes presenters notes
+        - heading 1 becomes title- heading 1 becomes title
+        - heading 2 becomes subtitle- heading 2 becomes subtitle
+        - item list becomes bullets- item list becomes bullets
+        - image link and code becomes image- image link and code becomes image
+        - quote + text becomes quote + attribution - quote + text becomes quote + attribution 
+        - text paragraphs becomes presenters notes- horisontal line marks end of slide
+        - horisontal line marks end of slide- text paragraphs becomes presenters notes
+        - master selected based on slide content
         
         ----
 
@@ -38,7 +39,6 @@ CodeFontSize : 18
 
 # Embrace Master Slides
 
-- Custom masters must implement:
 - Title & Subtitle
 - Photo - Horizontal
 - Title - Center
