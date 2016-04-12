@@ -10,7 +10,7 @@ from applescripting import OSAScript
 
 
 def process_path(path):
-    return os.path.abspath(os.path.expandvars(os.path.expanduser(path)))
+    return os.path.abspath(os.path.expandvars(os.path.expanduser(path.decode('string_escape'))))
 
 
 class RunFormatter(Formatter):
