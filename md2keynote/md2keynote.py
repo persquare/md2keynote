@@ -61,6 +61,7 @@ class KeynoteRenderer(mistune.Renderer):
         self._state = {}
         self._order = []
         self._paragraphs = []
+        self._count = 0
 
 
     def new_slide(self):
