@@ -74,7 +74,8 @@ CodeFontSize : 18
 
 - No bold or emphasis in bullets
 - No sub-bullets
-- Code blocks are centered
+- Code blocks are centered in most themes
+- 'Photo - 3 Up' master image order depends on theme
 - Spaces in file references must be escaped (\x20)
 
 ----
@@ -156,7 +157,18 @@ def hello():
     print "Hello World!"
 ```
 
-![alt text][2]
+```seqdiag
+{
+  shadow_style = "none";
+  default_fontsize = 16;
+  browser  -> webserver [label = "GET /index.html"];
+  browser <-- webserver;
+  browser  -> webserver [label = "POST /blog/comment"];
+              webserver  -> database [label = "INSERT comment"];
+              webserver <-- database;
+  browser <-- webserver;
+}
+```
 
 ----
 

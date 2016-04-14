@@ -1,6 +1,4 @@
 Tasks:
-+ Add support for sequence diagrams etc. similar to markdoc
-  See zk://150818101151 "Mini-language for drawing sequence diagrams "
 - renderer for PPT?
 
 Custom Theme:
@@ -10,6 +8,8 @@ Custom Theme:
 Markdown syntax:
 - Use metadata for
   - Prefer title at top instead of centered
+  - Image order in 'Photo - 3 Up' master
+  - Syntax highlight theme
   - wide/narrow
   - author
   - organization
@@ -29,6 +29,9 @@ Controlling Keynote:
 
 
 Archive:
+---- 2016-04-14 16:24:13 ----
++ Add support for sequence diagrams etc. similar to markdoc
+See zk://150818101151 "Mini-language for drawing sequence diagrams "
 ---- 2016-04-13 14:18:19 ----
 + Turn into proper CLI tool
 + Add setup.py
