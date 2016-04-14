@@ -1,22 +1,21 @@
 Tasks:
-- Turn into proper CLI tool
++ Add support for sequence diagrams etc. similar to markdoc
+  See zk://150818101151 "Mini-language for drawing sequence diagrams "
 - renderer for PPT?
 
 Custom Theme:
   See https://iworkautomation.com/keynote/theme.html
-- Provide master slides for all standard names
-  See file:///~/Source/md2keynote/KeynoteMasterSlides.txt
-- Fix names of all master slides
+- Fix default text item layout (left aligned, no leading space before paragraph)
 
 Markdown syntax:
 - Use metadata for
+  - Prefer title at top instead of centered
   - wide/narrow
   - author
   - organization
   - footer
   - autoplay
   - automatic export
-  - monospace font
   See http://hiltmon.com/blog/2012/06/18/markdown-metadata/
 - Simple animation annotation?
 
@@ -30,6 +29,13 @@ Controlling Keynote:
 
 
 Archive:
+---- 2016-04-13 14:18:19 ----
++ Turn into proper CLI tool
++ Add setup.py
++ Provide master slides for all standard names
+See file:///~/Source/md2keynote/KeynoteMasterSlides.txt
++ Fix names of all master slides
++ monospace font
 ---- 2016-04-11 16:40:48 ----
 + Pygment formatter for CalvinScript
 + get rid of _count, use return value from createNewSlide()
