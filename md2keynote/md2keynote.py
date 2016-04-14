@@ -2,10 +2,13 @@
 
 import os
 import copy
+import tempfile
 import mistune
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatter import Formatter
+from seqdiag import parser, builder, drawer
+from blockdiag.utils.fontmap import FontMap
 from applescripting import OSAScript
 
 
@@ -235,14 +238,23 @@ class KeynoteRenderer(mistune.Renderer):
         if notes:
             self.keynote.addPresenterNotes(self.doc, self._count, "\n\n".join(notes))
 
+    def media_from_seqdiag(self, code, lang):
+        fmt = 'pdf'
+        tempdir = tempfile.gettempdir()
+        n = len(self._state.setdefault('media', []))
+        mediafile = os.path.join(tempdir, "{}_{}_{}.{}".format(self.doc, self._count, n, fmt))
+        fontmap = FontMap()
+        # FIXME: Get font from master slide body text
+        fontmap.set_default_font('/Library/Fonts/Arial.ttf')
+        tree = parser.parse_string(code)
+        diagram = builder.ScreenNodeBuilder.build(tree)
+        draw = drawer.DiagramDraw(fmt, diagram, mediafile, fontmap=fontmap, nodoctype=True)
+        draw.draw()
+        draw.save()
+        self.image(mediafile, "title", "alt text")
 
-    def block_code(self, code, lang=None):
-        """Rendering block level code. ``pre > code``.
 
-        :param code: text content of the code block.
-        :param lang: language of the given code.
-        """
-        code = code.rstrip()
+    def media_from_code(self, code, lang):
         try:
             lexer = get_lexer_by_name(lang, stripall=False)
             run = highlight(code, lexer, RunFormatter())
@@ -252,6 +264,19 @@ class KeynoteRenderer(mistune.Renderer):
         self._state.setdefault('media', [])
         self._state['media'].append([code, styling])
         self._order.append('media')
+
+
+    def block_code(self, code, lang=None):
+        """Rendering block level code. ``pre > code``.
+
+        :param code: text content of the code block.
+        :param lang: language of the given code.
+        """
+        code = code.rstrip()
+        handler = {
+            'seqdiag':self.media_from_seqdiag,
+        }.get(lang, self.media_from_code)
+        handler(code, lang)
         return ''
 
     def block_quote(self, text):
