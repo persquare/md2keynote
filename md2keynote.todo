@@ -1,6 +1,10 @@
 Tasks:
 - renderer for PPT?
 
+Bugs:
+- Image references are assumed to be relative
+- Can't handle "weird" characters, e.g. –, ’”
+
 Custom Theme:
   See https://iworkautomation.com/keynote/theme.html
 - Fix default text item layout (left aligned, no leading space before paragraph)
