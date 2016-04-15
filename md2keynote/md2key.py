@@ -12,8 +12,11 @@ METADATA = r'^\s*(\w+)\s*:\s*(.*?)\s*$'
 
 
 def preprocess(file):
+    # file could be 1) absolute, 2) using ~, 3) using $HOME, or 4) relative (to CWD)
+    file = process_path(file, os.getcwd())
+    
+    meta = {'_BaseDir':os.path.dirname(file)}
     path_keys = ['File']
-    meta = {}
     lines = []
     with open(file) as f:
         in_metadata = True
@@ -30,11 +33,12 @@ def preprocess(file):
             if not in_metadata:
                 lines.append(line)
         text = "".join(lines)
-    # Process paths
+    # Process paths given in metadata section
+    # Prepend relative paths with abs path of dir containing the .md file
     for key in path_keys:
         if key in meta:
-            meta[key] = process_path(meta[key])
-
+            meta[key] = process_path(meta[key], meta['_BaseDir'])
+            
     return meta, text
 
 
@@ -43,12 +47,14 @@ def main():
     if len(sys.argv) != 2:
         print 'Usage:\n\t{} <file>\n'.format(sys.argv[0])
         sys.exit(1)
+        
+    md_file = sys.argv[1]
 
     with open(os.path.join(os.path.dirname(__file__), "helpers/keynote.applescript")) as f:
         source = f.read().decode('utf-8')
     keynote = OSAScript(source)
 
-    meta, text =  preprocess(sys.argv[1])
+    meta, text =  preprocess(md_file)
     theme = meta.get('Theme', 'White')
     doc = keynote.newPresentation(theme)
 

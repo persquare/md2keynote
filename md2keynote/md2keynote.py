@@ -12,8 +12,13 @@ from blockdiag.utils.fontmap import FontMap
 from applescripting import OSAScript
 
 
-def process_path(path):
-    return os.path.abspath(os.path.expandvars(os.path.expanduser(path.decode('string_escape'))))
+def process_path(filepath, basepath):
+    filepath = filepath.decode('string_escape')
+    filepath = os.path.expanduser(filepath)
+    filepath = os.path.expandvars(filepath)
+    filepath = os.path.normpath(os.path.join(basepath, filepath))
+    
+    return filepath
 
 
 class RunFormatter(Formatter):
@@ -54,11 +59,13 @@ class KeynoteRenderer(mistune.Renderer):
         self.keynote = keynote
         self.doc = doc
         self._reset_state()
-        self._options = options or self.defaults()
+        self._options = self.defaults()
+        if options:
+            self._options.update(options)
 
     @staticmethod
     def defaults():
-        return copy.copy({'CodeFont': 'Menlo', 'CodeFontSize': 16, '_FlipQuote': False})
+        return copy.copy({'CodeFont': 'Menlo', 'CodeFontSize': 16, '_FlipQuote': False, '_BaseDir':os.getcwd()})
 
     def _reset_state(self):
         self._state = {}
@@ -424,7 +431,7 @@ class KeynoteRenderer(mistune.Renderer):
         :param text: alt text of the image.
         """
         self._state.setdefault('media', [])
-        self._state['media'].append([process_path(src), title, text])
+        self._state['media'].append([process_path(src, self._options['_BaseDir']), title, text])
         self._order.append('image')
         return ''
 
