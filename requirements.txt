@@ -1,3 +1,4 @@
 pygments>=2.1
 mistune>=0.7.1
 seqdiag>=0.9.5
+reportlab>=3.3.0
