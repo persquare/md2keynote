@@ -3,6 +3,7 @@
 import os
 import copy
 import tempfile
+import ast
 import mistune
 from pygments import highlight
 from pygments.lexers import get_lexer_by_name
@@ -65,7 +66,7 @@ class KeynoteRenderer(mistune.Renderer):
 
     @staticmethod
     def defaults():
-        return copy.copy({'CodeFont': 'Menlo', 'CodeFontSize': 16, '_FlipQuote': False, '_BaseDir':os.getcwd()})
+        return copy.copy({'HighlightCode':"True", 'CodeFont': 'Menlo', 'CodeFontSize': 16, '_FlipQuote': "False", '_BaseDir':os.getcwd()})
 
     def _reset_state(self):
         self._state = {}
@@ -151,7 +152,7 @@ class KeynoteRenderer(mistune.Renderer):
     def new_quote_slide(self):
         master = 'Quote'
         quote_index, attr_index = 2, 1
-        if self._options.get('_FlipQuote', False):
+        if ast.literal_eval(self._options['_FlipQuote']):
             quote_index, attr_index = attr_index, quote_index
         self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addText(self.doc, self._count, quote_index, self._state['quote'])
@@ -204,7 +205,7 @@ class KeynoteRenderer(mistune.Renderer):
             self.keynote.addImage(self.doc, self._count, placeholderIndex, media[0])
         else:
             # media is code
-            fontsize = self._options.get('CodeFontSize', 18)
+            fontsize = int(self._options.get('CodeFontSize', 18))
             fontname = self._options.get('CodeFont', 'Menlo')
             source, style = media
             self.keynote.addStyledTextItemAsMedia(self.doc, self._count, placeholderIndex, source, style, fontsize, fontname)
