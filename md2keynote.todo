@@ -1,6 +1,7 @@
 Tasks:
 x renderer for PPT?
   Use metadata, e.g. Export : PPT
+- get slide properties (fonts, items, placeholders etc for better layout)
 
 Bugs:
 + Image references are assumed to be relative
@@ -12,6 +13,7 @@ Bugs:
 Custom Theme:
   See https://iworkautomation.com/keynote/theme.html
 - Fix default text item layout (left aligned, no leading space before paragraph)
+- Make content -> master mapping more flexible and allow custom mappings
 
 Markdown syntax:
 - Use metadata for
@@ -25,6 +27,7 @@ Markdown syntax:
   - footer
   - autoplay
   - automatic export
+  - animate bullets
   See http://hiltmon.com/blog/2012/06/18/markdown-metadata/
 - Simple animation annotation?
 
@@ -38,6 +41,8 @@ Controlling Keynote:
 
 
 Archive:
+---- 2016-04-16 10:26:47 ----
++ Image references are assumed to be relative to CWD
 ---- 2016-04-14 16:24:13 ----
 + Add support for sequence diagrams etc. similar to markdoc
 See zk://150818101151 "Mini-language for drawing sequence diagrams "
