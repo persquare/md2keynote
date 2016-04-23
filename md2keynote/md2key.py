@@ -54,20 +54,27 @@ def main():
         source = f.read().decode('utf-8')
     keynote = OSAScript(source)
 
+    # Extract user options from markdown metadata
     meta, text =  preprocess(md_file)
     theme = meta.get('Theme', 'White')
     doc = keynote.newPresentation(theme)
 
-    options = KeynoteRenderer.defaults()
-    # Handle buggy templates
+    user_options = {}
+    # Handle buggy templates by overriding some defaults
     if theme in ["Modern Type", "Parchment", "Blueprint", "Graph Paper", "Craft", "Exhibition", "Editorial"]:
-        options['_FlipQuote'] = True
-    # Get user options from markdown metadata
-    known_options = options.keys()
-    user_options = {x: meta[x] for x in known_options if x in meta}
-    options.update(user_options)
-
-    md = mistune.Markdown(renderer=KeynoteRenderer(keynote, doc, options))
+        user_options['_FlipQuote'] = True
+    default_options = KeynoteRenderer.defaults()
+    for known_key, default_value in default_options.iteritems():
+        if known_key not in meta:
+            continue
+        if type(default_value) is bool:
+            user_options[known_key] = bool(meta[known_key].upper() == 'TRUE')
+        elif type(default_value) is int:
+            user_options[known_key] = int(meta[known_key])
+        else:
+            user_options[known_key] = meta[known_key]
+    
+    md = mistune.Markdown(renderer=KeynoteRenderer(keynote, doc, user_options))
     md.parse(text)
     keynote.finalize(doc)
     if 'File' in meta:
