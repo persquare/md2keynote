@@ -1,10 +1,7 @@
 Tasks:
-x renderer for PPT?
-  Use metadata, e.g. Export : PPT
 - get slide properties (fonts, items, placeholders etc for better layout)
 
 Bugs:
-+ Image references are assumed to be relative
 - Make error messages useful
 - Make master selection resilient
   e.g. pick 'Title, Bullets & Image' even if only title + image given
@@ -19,7 +16,6 @@ Markdown syntax:
 - Use metadata for
   - Prefer title at top instead of centered
   - Image order in 'Photo - 3 Up' master
-  - Syntax highlight on/off (since it is so sloooow)
   - Syntax highlight theme
   - wide/narrow
   - author
@@ -41,6 +37,11 @@ Controlling Keynote:
 
 
 Archive:
+---- 2016-04-23 22:05:23 ----
+x renderer for PPT?
+Use metadata, e.g. Export : PPT
++ Image references are assumed to be relative
++ Syntax highlight on/off (since it is so sloooow)
 ---- 2016-04-16 10:26:47 ----
 + Image references are assumed to be relative to CWD
 ---- 2016-04-14 16:24:13 ----
