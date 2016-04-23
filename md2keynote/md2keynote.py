@@ -263,12 +263,14 @@ class KeynoteRenderer(mistune.Renderer):
 
 
     def media_from_code(self, code, lang):
-        try:
-            lexer = get_lexer_by_name(lang, stripall=False)
-            run = highlight(code, lexer, RunFormatter())
-            styling = run_to_ASRGB(run)
-        except:
-            styling = []
+        styling = []
+        if ast.literal_eval(self._options['HighlightCode']):
+            try:
+                lexer = get_lexer_by_name(lang, stripall=False)
+                run = highlight(code, lexer, RunFormatter())
+                styling = run_to_ASRGB(run)
+            except:
+                styling = []
         self._state.setdefault('media', [])
         self._state['media'].append([code, styling])
         self._order.append('media')
