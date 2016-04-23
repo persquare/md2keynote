@@ -1,8 +1,12 @@
 Tasks:
-- renderer for PPT?
+x renderer for PPT?
+  Use metadata, e.g. Export : PPT
 
 Bugs:
-- Image references are assumed to be relative
++ Image references are assumed to be relative
+- Make error messages useful
+- Make master selection resilient
+  e.g. pick 'Title, Bullets & Image' even if only title + image given
 - Can't handle "weird" characters, e.g. –, ’”
 
 Custom Theme:
@@ -13,6 +17,7 @@ Markdown syntax:
 - Use metadata for
   - Prefer title at top instead of centered
   - Image order in 'Photo - 3 Up' master
+  - Syntax highlight on/off (since it is so sloooow)
   - Syntax highlight theme
   - wide/narrow
   - author
