@@ -17,7 +17,7 @@ def process_path(filepath, basepath):
     filepath = os.path.expanduser(filepath)
     filepath = os.path.expandvars(filepath)
     filepath = os.path.normpath(os.path.join(basepath, filepath))
-    
+
     return filepath
 
 
@@ -183,7 +183,11 @@ class KeynoteRenderer(mistune.Renderer):
         self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, '\n'.join(self._state['bullets']))
-        self.add_media(1, self._state['media'][0])
+        # Allow more code snippet than there are placeholders
+        count = 1
+        for media in self._state['media']:
+            self.add_media(count, media, master)
+            count += 1
         self.add_notes(master)
 
     def new_title_photo_slide(self):
@@ -198,7 +202,7 @@ class KeynoteRenderer(mistune.Renderer):
         self.add_notes(master)
 
 
-    def add_media(self, placeholderIndex, media):
+    def add_media(self, placeholderIndex, media, master):
         if len(media) == 3:
             # media is image
             self.keynote.addImage(self.doc, self._count, placeholderIndex, media[0])
@@ -207,8 +211,12 @@ class KeynoteRenderer(mistune.Renderer):
             fontsize = self._options['CodeFontSize']
             fontname = self._options['CodeFont']
             source, style = media
-            self.keynote.addStyledTextItemAsMedia(self.doc, self._count, placeholderIndex, source, style, fontsize, fontname)
-
+            slots = self.media_slots(master)
+            if placeholderIndex <= slots:
+                self.keynote.addStyledTextItemAsMedia(self.doc, self._count, placeholderIndex, source, style, fontsize, fontname)
+            else:
+                position = (100*(placeholderIndex - slots), 100*(placeholderIndex - slots))
+                self.keynote.addStyledTextItem(self.doc, self._count, source, style, position, fontsize, fontname)
 
     # def add_code(self):
     #     if not 'code' in self._state:
@@ -221,6 +229,24 @@ class KeynoteRenderer(mistune.Renderer):
     #         x += 100
     #         y += 100
     #         self.keynote.addStyledTextItem(self.doc, self._count, code, styling, (x, y), fontsize, fontname)
+
+
+    def media_slots(self, master):
+        return {
+            'Photo - 3 Up': 3,
+            'Photo': 1,
+            'Blank': 0,
+            'Bullets': 0,
+            'Title - Center': 0,
+            'Title - Top': 0,
+            'Title & Bullets': 0,
+            'Title, Bullets & Photo': 1,
+            'Title & Subtitle': 0,
+            'Photo - Horizontal': 1,
+            'Photo - Vertical': 1,
+            'Quote': 0
+        }.get(master, 0)
+
 
 
     def add_notes(self, master):
