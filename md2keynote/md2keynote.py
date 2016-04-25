@@ -144,7 +144,7 @@ class KeynoteRenderer(mistune.Renderer):
         media = self._state['media'][0:3]
         # Must iterate backwards since we might delete placeholder images if media is not image
         for m in media:
-            self.add_media(i, m)
+            self.add_media(i, m, master)
             i -= 1
         self.add_notes(master)
 
@@ -198,7 +198,7 @@ class KeynoteRenderer(mistune.Renderer):
         self._count = self.keynote.createSlide(self.doc, master)
         self.keynote.addTitle(self.doc, self._count, self._state['title'])
         self.keynote.addBody(self.doc, self._count, self._state['subtitle'])
-        self.add_media(1, self._state['media'][0])
+        self.add_media(1, self._state['media'][0], master)
         self.add_notes(master)
 
 
