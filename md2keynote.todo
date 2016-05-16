@@ -1,11 +1,11 @@
 Tasks:
-- get slide properties (fonts, items, placeholders etc for better layout)
+- Get slide properties (fonts, items, placeholders etc for better layout)
+- Handle italic, bold, and inline code (monospace)
 
 Bugs:
 - Make error messages useful
 - Make master selection resilient
   e.g. pick 'Title, Bullets & Image' even if only title + image given
-- Can't handle "weird" characters, e.g. –, ’”
 
 Custom Theme:
   See https://iworkautomation.com/keynote/theme.html
@@ -37,6 +37,10 @@ Controlling Keynote:
 
 
 Archive:
+---- 2016-05-11 20:03:10 ----
++ Can't handle "weird" characters, e.g. –, ’”
++ Non-ascii chars (åäö et al) causes crash
+Fixed in commit #6695faec
 ---- 2016-04-23 22:05:23 ----
 x renderer for PPT?
 Use metadata, e.g. Export : PPT

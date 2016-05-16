@@ -312,7 +312,7 @@ class KeynoteRenderer(mistune.Renderer):
             'seqdiag':self.media_from_seqdiag,
         }.get(lang, self.media_from_code)
         handler(code, lang)
-        return ''
+        return u''
 
     def block_quote(self, text):
         """Rendering <blockquote> with the given text.
@@ -320,14 +320,14 @@ class KeynoteRenderer(mistune.Renderer):
         :param text: text content of the blockquote.
         """
         self._state['quote'] = text
-        return ''
+        return u''
 
     def block_html(self, html):
         """Rendering block level pure html content.
 
         :param html: text content of the html snippet.
         """
-        return 'block_html\n'
+        return u'block_html\n'
 
     def header(self, text, level, raw=None):
         """Rendering header/heading tags like ``<h1>`` ``<h2>``.
@@ -344,12 +344,12 @@ class KeynoteRenderer(mistune.Renderer):
         if kind:
             self._state[kind] = text.strip()
             self._order.append(kind)
-        return ''
+        return u''
 
     def hrule(self):
         """Rendering method for ``<hr>`` tag."""
         self.new_slide()
-        return ''
+        return u''
 
     def list(self, body, ordered=True):
         """Rendering list tags like ``<ul>`` and ``<ol>``.
@@ -358,11 +358,11 @@ class KeynoteRenderer(mistune.Renderer):
         :param ordered: whether this list is ordered or not.
         """
         self._state['bullets'] = body.strip().split('\n')
-        return ''
+        return u''
 
     def list_item(self, text):
         """Rendering list item snippet. Like ``<li>``."""
-        return '{}\n'.format(text)
+        return u'{}\n'.format(text)
 
     def paragraph(self, text):
         """Rendering paragraph tags. Like ``<p>``."""
@@ -374,14 +374,14 @@ class KeynoteRenderer(mistune.Renderer):
         :param header: header part of the table.
         :param body: body part of the table.
         """
-        return 'table\n'
+        return u'table\n'
 
     def table_row(self, content):
         """Rendering a table row. Like ``<tr>``.
 
         :param content: content of current table row.
         """
-        return 'table_row\n'
+        return u'table_row\n'
 
     def table_cell(self, content, **flags):
         """Rendering a table cell. Like ``<th>`` ``<td>``.
@@ -390,39 +390,39 @@ class KeynoteRenderer(mistune.Renderer):
         :param header: whether this is header or not.
         :param align: align of current table cell.
         """
-        return 'table_cell\n'
+        return u'table_cell\n'
 
     def double_emphasis(self, text):
         """Rendering **strong** text.
 
         :param text: text content for emphasis.
         """
-        return 'double_emphasis\n'
+        return u'double_emphasis\n'
 
     def emphasis(self, text):
         """Rendering *emphasis* text.
 
         :param text: text content for emphasis.
         """
-        return 'emphasis\n'
+        return u'emphasis\n'
 
     def codespan(self, text):
         """Rendering inline `code` text.
 
         :param text: text content for inline code.
         """
-        return 'codespan\n'
+        return u'codespan\n'
 
     def linebreak(self):
         """Rendering line break like ``<br>``."""
-        return 'linebreak\n'
+        return u'linebreak\n'
 
     def strikethrough(self, text):
         """Rendering ~~strikethrough~~ text.
 
         :param text: text content for strikethrough.
         """
-        return 'strikethrough\n'
+        return u'strikethrough\n'
 
     def text(self, text):
         """Rendering unformatted text.
@@ -440,7 +440,7 @@ class KeynoteRenderer(mistune.Renderer):
         :param link: link content or email address.
         :param is_email: whether this is an email or not.
         """
-        return 'autolink\n'
+        return u'autolink\n'
 
     def link(self, link, title, text):
         """Rendering a given link with content and title.
@@ -449,7 +449,7 @@ class KeynoteRenderer(mistune.Renderer):
         :param title: title content for `title` attribute.
         :param text: text content for description.
         """
-        return 'link\n'
+        return u'link\n'
 
     def image(self, src, title, text):
         """Rendering a image with title and text.
@@ -461,18 +461,18 @@ class KeynoteRenderer(mistune.Renderer):
         self._state.setdefault('media', [])
         self._state['media'].append([process_path(src, self._options['_BaseDir']), title, text])
         self._order.append('image')
-        return ''
+        return u''
 
     def inline_html(self, html):
         """Rendering span level pure html content.
 
         :param html: text content of the html snippet.
         """
-        return 'inline_html\n'
+        return u'inline_html\n'
 
     def newline(self):
         """Rendering newline element."""
-        return 'newline\n'
+        return u'newline\n'
 
     def footnote_ref(self, key, index):
         """Rendering the ref anchor of a footnote.
@@ -480,7 +480,7 @@ class KeynoteRenderer(mistune.Renderer):
         :param key: identity key for the footnote.
         :param index: the index count of current footnote.
         """
-        return 'footnote_ref\n'
+        return u'footnote_ref\n'
 
     def footnote_item(self, key, text):
         """Rendering a footnote item.
@@ -488,14 +488,14 @@ class KeynoteRenderer(mistune.Renderer):
         :param key: identity key for the footnote.
         :param text: text content of the footnote.
         """
-        return 'footnote_item\n'
+        return u'footnote_item\n'
 
     def footnotes(self, text):
         """Wrapper for all footnotes.
 
         :param text: contents of all footnotes.
         """
-        return 'footnotes\n'
+        return u'footnotes\n'
 
 
 
